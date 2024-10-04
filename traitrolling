@@ -1,0 +1,66 @@
+getgenv().WantedThoseTraits = {"Prime","Overconfident Prime","Solar","Icarus Solar","Cursed","Undying Cursed","Vampiric","Ancient Vampiric","Gluttonous","Festering Gluttonous","Voided","Abyssal Voided","Gambler","Idle Death Gambler","Overflowing","Torrential Overflowing","Deferred","Fractured Deferred","True","Vitriolic True","Cultivation","Soul Reaping Cultivation","Economic","Greedy Economic","Angelic","Fallen Angelic","Godly","Egotistic Godly","Temporal","FTL Temporal","Spiritual","Psychotic Spiritual","Ryoiki","Heavenly Restricted Ryoiki","RCT","Automatic RCT"};
+getgenv().AutoPickingTraits = true; -- // type "false" to stop.
+ 
+task.spawn(function()
+    while getgenv().AutoPickingTraits == true do 
+        if game:GetService("Players").LocalPlayer.PlayerGui.UI.Gameplay.TraitHandPrompt.Visible == true then
+            local OpenTraitMenu = game:GetService("Players").LocalPlayer.PlayerGui.UI.Gameplay.MoveHandPrompt.TextLabel;
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(OpenTraitMenu.AbsolutePosition.X+OpenTraitMenu.AbsoluteSize.X/1.5,OpenTraitMenu.AbsolutePosition.Y+37,0,true,OpenTraitMenu,4.5);
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(OpenTraitMenu.AbsolutePosition.X+OpenTraitMenu.AbsoluteSize.X/1.5,OpenTraitMenu.AbsolutePosition.Y+37,0,false,OpenTraitMenu,4.5);
+        end
+        task.wait(1.35);
+        if game:GetService("Players").LocalPlayer.PlayerGui.UI.Gameplay.TraitHands.Visible == true and game:GetService("Players").LocalPlayer.PlayerGui.UI.Gameplay.TraitHands.ShowAll.Visible == true then
+            local RevealEverything = game:GetService("Players").LocalPlayer.PlayerGui.UI.Gameplay.TraitHands.ShowAll.TextLabel;
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(RevealEverything.AbsolutePosition.X+RevealEverything.AbsoluteSize.X/1.5,RevealEverything.AbsolutePosition.Y+37,0,true,RevealEverything,4,5);
+            game:GetService("VirtualInputManager"):SendMouseButtonEvent(RevealEverything.AbsolutePosition.X+RevealEverything.AbsoluteSize.X/1.5,RevealEverything.AbsolutePosition.Y+37,0,false,RevealEverything,4.5);
+        end
+    end
+    task.wait(0.45);
+end)
+ 
+task.spawn(function()
+    while getgenv().AutoPickingTraits == true do
+        pcall(function()
+            local TraitHolder = game:GetService("Players").LocalPlayer.PlayerGui.UI.Gameplay.TraitHands.Holder;            
+            local TraitHolders = {TraitHolder["1"].Content.Title.Label,TraitHolder["2"].Content.Title.Label,TraitHolder["3"].Content.Title.Label};
+            local DiscardTrait = game:GetService("Players").LocalPlayer.PlayerGui.UI.Gameplay.TraitHands.Discard.TextLabel;
+ 
+            if game:GetService("Players").LocalPlayer.PlayerGui.UI.Gameplay.TraitHands.Visible == true then local FoundTrait = false;
+                for _,v in ipairs(TraitHolders) do
+                    for _,x in ipairs(getgenv().WantedThoseTraits) do
+                        if v.Text:match(x) then FoundTrait = true;
+                            game:GetService("VirtualInputManager"):SendMouseButtonEvent(v.AbsolutePosition.X + v.AbsoluteSize.X/1.5,v.AbsolutePosition.Y + 37,0,true,v,4.5);
+                            game:GetService("VirtualInputManager"):SendMouseButtonEvent(v.AbsolutePosition.X + v.AbsoluteSize.X/1.5,v.AbsolutePosition.Y + 37,0,false,v,4.5);
+                            task.wait(0.51);for _,x in ipairs(game:GetService("Players").LocalPlayer.PlayerGui.UI.Prompt.Frame.Buttons:GetChildren()) do
+                                if x:IsA("TextButton") then
+                                    if x:FindFirstChildOfClass("TextLabel").Text == "Yes" then
+                                        game:GetService("VirtualInputManager"):SendMouseButtonEvent(x.AbsolutePosition.X + x.AbsoluteSize.X/1.5,x.AbsolutePosition.Y + 37,0,true,x,4.5);
+                                        task.wait(0.1);
+                                        game:GetService("VirtualInputManager"):SendMouseButtonEvent(x.AbsolutePosition.X + x.AbsoluteSize.X/1.5,x.AbsolutePosition.Y + 37,0,false,x,4.5);
+                                    end
+                                end
+                            end
+                            task.spawn(function()task.wait(5.15);
+                                getgenv().AutoPickingTraits = false;
+                            end)
+                        end
+                    end
+                end
+                if not FoundTrait then
+                    game:GetService("VirtualInputManager"):SendMouseButtonEvent(DiscardTrait.AbsolutePosition.X+DiscardTrait.AbsoluteSize.X/1.5,DiscardTrait.AbsolutePosition.Y+37,0,true,DiscardTrait,4.5);
+                    game:GetService("VirtualInputManager"):SendMouseButtonEvent(DiscardTrait.AbsolutePosition.X+DiscardTrait.AbsoluteSize.X/1.5,DiscardTrait.AbsolutePosition.Y+37,0,false,DiscardTrait,4.5);
+                    task.wait(0.51);for _,x in ipairs(game:GetService("Players").LocalPlayer.PlayerGui.UI.Prompt.Frame.Buttons:GetChildren()) do
+                        if x:IsA("TextButton") then
+                            if x:FindFirstChildOfClass("TextLabel").Text == "Yes" then
+                                game:GetService("VirtualInputManager"):SendMouseButtonEvent(x.AbsolutePosition.X + x.AbsoluteSize.X/1.5,x.AbsolutePosition.Y + 37,0,true,x,4.5);
+                                task.wait(0.1);
+                                game:GetService("VirtualInputManager"):SendMouseButtonEvent(x.AbsolutePosition.X + x.AbsoluteSize.X/1.5,x.AbsolutePosition.Y + 37,0,false,x,4.5);
+                            end
+                        end
+                    end
+                end
+            end
+        end)
+        task.wait(1.25);
+    end
+end)
